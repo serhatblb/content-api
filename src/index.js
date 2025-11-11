@@ -45,6 +45,7 @@ app.use("/captions", captions);
 app.use("/hashtags", hashtags);
 app.use("/facts", facts);
 app.use("/planner", planner);
+app.use(express.static("public")); // 👈 public klasöründeki index.html ana sayfa olur
 
 
 // Docs
