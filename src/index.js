@@ -5,6 +5,7 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import api from "./routes/api.js";
 
 
 import quotes from "./routes/quotes.js";
@@ -34,6 +35,7 @@ app.use(morgan("tiny"));
 const limiter = rateLimit({ windowMs: 60 * 1000, max: 60 });
 app.use(limiter);
 
+app.use("/api", api);
 
 // Health & status
 app.get("/health", (req, res) => res.json({ ok: true, uptime: process.uptime(), ts: Date.now() }));
