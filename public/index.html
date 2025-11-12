@@ -1,103 +1,361 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Influencer Content API 🚀</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #00ADB5;
-      --bg: #222831;
-      --text: #EEEEEE;
+      --bg: #0c1016;
+      --bg-2: #111827;
+      --card: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+      --text: #eaf6ff;
+      --muted: #b6c2d1;
+      --primary: #00ADB5; /* mevcut paletini koruduk */
+      --accent: #8b5cf6; /* mor */
+      --hot: #ff6b6b;
+      --ok: #20c997;
+      --glow: 0 0 25px rgba(0,173,181,0.35), 0 0 60px rgba(139,92,246,0.25);
+      --radius: 18px;
     }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
-      margin: 0;
-      font-family: "Inter", sans-serif;
-      background: linear-gradient(135deg, var(--bg), #393E46);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
+      margin: 0; color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 800px at 80% -10%, rgba(0,173,181,0.18), transparent 60%),
+                  radial-gradient(900px 700px at -10% 0%, rgba(139,92,246,0.16), transparent 60%),
+                  linear-gradient(180deg, #0b0f15, #0f1723 30%, #0c1016);
+      overflow-x: hidden;
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.25rem;
-      color: var(--primary);
+
+    /* --- Animated Aurora Background --- */
+    .aurora {
+      position: fixed; inset: -20vmax; z-index: -1; filter: blur(40px) saturate(120%);
+      background: conic-gradient(from 0deg at 50% 50%, rgba(0,173,181,0.35), rgba(139,92,246,0.28), rgba(255,107,107,0.22), rgba(0,173,181,0.35));
+      animation: swirl 18s infinite linear;
+      opacity: .65; pointer-events: none;
     }
-    p {
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: 0.5rem auto;
-      opacity: 0.9;
+    @keyframes swirl { to { transform: rotate(360deg); } }
+
+    /* --- NAV --- */
+    .nav {
+      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(12,16,22,0.8), rgba(12,16,22,0.35));
+      border-bottom: 1px solid var(--card-border);
     }
-    .buttons {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; gap: 16px; }
+    .logo {
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text);
+      font-family: Poppins, Inter, sans-serif; font-weight: 800; letter-spacing: .5px;
     }
-    a.btn {
-      text-decoration: none;
-      color: var(--primary);
-      border: 1px solid var(--primary);
-      padding: 10px 18px;
-      border-radius: 8px;
-      transition: all 0.3s;
-      font-weight: 500;
+    .logo-mark { width: 34px; height: 34px; border-radius: 10px; position: relative; overflow: hidden; box-shadow: var(--glow); }
+    .logo-mark::before { content:""; position:absolute; inset:0; background: linear-gradient(135deg, var(--primary), var(--accent)); }
+    .logo small { color: var(--muted); font-weight: 600; margin-left: 6px; opacity: .8; }
+    .nav-actions { margin-left: auto; display: flex; gap: 10px; }
+
+    .btn { --pad: 11px 16px; display:inline-flex; align-items:center; gap:10px; padding: var(--pad); border-radius: 12px; border:1px solid var(--card-border); color:var(--text); text-decoration:none; font-weight:600; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)); transition: transform .15s ease, box-shadow .2s ease, background .2s ease; }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--glow); }
+    .btn.primary { background: linear-gradient(180deg, rgba(0,173,181,0.22), rgba(0,173,181,0.05)); border-color: rgba(0,173,181,0.45); color: #c9feff; }
+    .btn.ghost { background: transparent; }
+
+    /* --- HERO --- */
+    .hero { max-width: 1200px; margin: 0 auto; padding: 56px 20px 24px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 28px; align-items: center; }
+    @media (max-width: 980px) { .hero { grid-template-columns: 1fr; text-align: center; } .badge-row { justify-content:center; } .nav-actions { display:none; } }
+
+    .title {
+      font-family: Poppins, Inter, sans-serif; font-weight: 800; font-size: clamp(2.1rem, 3vw + 1rem, 4rem); line-height: 1.05;
+      letter-spacing: .2px; margin: 6px 0 12px; background: linear-gradient(90deg, #c9feff, #f1eaff 50%, #ffd7d7);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    a.btn:hover {
-      background: var(--primary);
-      color: var(--bg);
-    }
-    footer {
-      margin-top: 4rem;
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-    code {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
-      border-radius: 6px;
-      color: #A5FFFA;
-    }
-    .example {
-      margin-top: 2rem;
-      background: rgba(255,255,255,0.05);
-      padding: 1rem 2rem;
-      border-radius: 10px;
-      max-width: 700px;
-      text-align: left;
-      font-size: 0.9rem;
-    }
+    .subtitle { color: var(--muted); font-size: 1.08rem; max-width: 680px; }
+
+    .badge-row { display: flex; gap: 10px; margin: 18px 0 26px; flex-wrap: wrap; }
+    .badge { padding: 6px 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--card-border); color: #cfe7ff; font-size: .85rem; display: inline-flex; align-items: center; gap: 8px; }
+    .pulse { width: 8px; height: 8px; border-radius: 999px; background: var(--ok); box-shadow: 0 0 0 0 rgba(32,201,151, .8); animation: pulse 1.6s infinite; }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(32,201,151,0); } 100% { box-shadow: 0 0 0 0 rgba(32,201,151,0);} }
+
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+
+    /* --- HERO DEMO CARD --- */
+    .demo-card { position: relative; background: linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.03)); border:1px solid var(--card-border); border-radius: var(--radius); padding: 16px; overflow:hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+    .demo-card .head { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom: 1px dashed rgba(255,255,255,0.12); }
+    .demo-card .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 6px rgba(0,173,181,0.13); }
+    .demo-card .title-sm { font-weight: 700; letter-spacing: .3px; }
+    .demo-card pre { margin: 12px 0 0; padding: 14px; background: rgba(0, 0, 0, 0.35); border:1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow:auto; font-size: .92rem; line-height: 1.5; color: #dff9ff; }
+    .demo-card code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+
+    /* --- Features --- */
+    .section { max-width: 1200px; margin: 0 auto; padding: 48px 20px; }
+    .section h2 { font-family: Poppins, Inter, sans-serif; font-size: clamp(1.4rem, 1.2vw + 1rem, 2rem); margin: 0 0 16px; letter-spacing: .4px; }
+    .grid { display:grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
+    .feature { grid-column: span 4; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 18px; position: relative; overflow: hidden; }
+    .feature::after { content:""; position: absolute; inset: -40% -60% auto auto; width: 240px; height: 240px; background: radial-gradient(closest-side, rgba(0,173,181,.18), transparent); transform: rotate(25deg); }
+    .feature h3 { margin: 0 0 8px; font-size: 1.1rem; letter-spacing: .3px; }
+    .feature p { margin: 0; color: var(--muted); font-size: .98rem; }
+
+    @media (max-width: 1024px) { .feature{ grid-column: span 6; } }
+    @media (max-width: 640px) { .feature{ grid-column: span 12; } }
+
+    /* --- Endpoints --- */
+    .endpoint { grid-column: span 3; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px dashed var(--card-border); border-radius: 16px; padding: 14px; }
+    .endpoint code { display:block; font-size:.95rem; color:#a5fffa; background: rgba(0,0,0,.35); border:1px solid rgba(255,255,255,0.08); padding:10px 12px; border-radius:10px; }
+    .endpoint small { color: var(--muted); }
+
+    /* --- Tabs --- */
+    .tabs { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; overflow:hidden; }
+    .tab-head { display:flex; gap:6px; padding:6px; border-bottom: 1px solid var(--card-border); background: rgba(255,255,255,0.03); }
+    .tab-btn { flex: none; padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; color: var(--muted); background: transparent; font-weight: 600; cursor: pointer; }
+    .tab-btn.active { color: #eaffff; border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.06); box-shadow: var(--glow); }
+    .tab-body { padding: 14px; }
+
+    /* --- Marquee chips --- */
+    .marquee { overflow: hidden; border: 1px dashed var(--card-border); border-radius: 999px; padding: 10px 0; background: rgba(255,255,255,0.03); }
+    .marquee-track { display:flex; gap: 12px; white-space: nowrap; will-change: transform; animation: scroll 18s linear infinite; }
+    @keyframes scroll { to { transform: translateX(-50%);} }
+    .chip { padding: 8px 12px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); border:1px solid var(--card-border); }
+
+    /* --- Footer --- */
+    footer { color: var(--muted); border-top: 1px solid var(--card-border); background: #0b0f15; }
+    .foot-inner { max-width:1200px; margin: 0 auto; padding: 28px 20px; display:flex; flex-wrap: wrap; align-items:center; gap:10px; }
+    .foot-inner a { color: #bfefff; text-decoration: none; }
+    .sep { opacity: .3; }
+
+    /* Nice little hover lift for cards */
+    .lift { transition: transform .15s ease, box-shadow .2s ease; }
+    .lift:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.35); }
   </style>
 </head>
 <body>
-  <h1>🚀 Influencer Content API</h1>
-  <p>Sosyal medya içerik üreticileri için hazır <strong>caption</strong>, <strong>hashtag</strong>, <strong>özlü söz</strong> ve <strong>fikir</strong> sağlayan API platformu.</p>
+  <div class="aurora" aria-hidden="true"></div>
 
-  <div class="buttons">
-    <a href="/docs" class="btn">📘 API Dokümantasyonu</a>
-    <a href="https://github.com/serhatblb/content-api" class="btn">⭐ GitHub Repo</a>
-  </div>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="#">
+        <span class="logo-mark"></span>
+        Influencer Content API <small>v1.0.0</small>
+      </a>
+      <div class="nav-actions">
+        <a class="btn ghost" href="https://theysaidso.com/#" target="_blank" rel="noreferrer">İlham Kaynağı #1</a>
+        <a class="btn ghost" href="https://zenquotes.io/" target="_blank" rel="noreferrer">İlham Kaynağı #2</a>
+        <a class="btn primary" href="/docs">📘 API Dokümantasyonu</a>
+        <a class="btn" href="https://github.com/serhatblb/content-api" target="_blank" rel="noreferrer">⭐ GitHub</a>
+      </div>
+    </div>
+  </nav>
 
-  <div class="example">
-    <h3>🔍 Örnek İstek</h3>
-    <p><code>GET /planner/daily?niche=fitness&lang=tr</code></p>
-    <p>Döndürür: <em>hook + caption + hashtag + CTA</em> paketi</p>
-    <pre>{
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="badge-row">
+        <span class="badge"><span class="pulse"></span> Canlı • 99.9% Uptime</span>
+        <span class="badge">REST + JSON</span>
+        <span class="badge">Ücretsiz Katman</span>
+      </div>
+      <h1 class="title">Sosyal medya için <em>anında</em> içerik: Hook, Caption, Hashtag ve CTA — tek API.</h1>
+      <p class="subtitle">Influencer Content API, nişe göre <strong>günlük plan</strong> ve <strong>paket</strong> döndüren eğlenceli bir içerik üretim servisi. Türkçe/İngilizce destekli, basit uç noktalar, güzel cevaplar. 🪄</p>
+      <div class="cta-row">
+        <a class="btn primary" href="/docs">Hemen Başla</a>
+        <a class="btn" href="#examples">Örnekler</a>
+        <a class="btn ghost" href="#endpoints">Uç Noktalar</a>
+      </div>
+    </div>
+
+    <div class="demo-card lift" aria-label="Kod örneği">
+      <div class="head">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="dot"></span>
+          <span class="title-sm">Örnek İstek</span>
+        </div>
+        <span class="badge">GET</span>
+      </div>
+      <pre><code>GET /planner/daily?niche=fitness&lang=tr</code></pre>
+      <div class="head" style="margin-top:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="dot" style="background: var(--accent);"></span>
+          <span class="title-sm">Örnek Yanıt</span>
+        </div>
+        <span class="badge" style="color:#eadbff">200 OK</span>
+      </div>
+      <pre><code>{
   "date": "2025-11-11",
   "niche": "fitness",
   "hook": "Bunu kimse söylemedi: Kas yapmanın gizli kuralı!",
   "caption": "Bugün kendine söz ver: 20 dk hareket. 💪",
   "hashtags": ["#spormotivasyonu", "#fitness", "#sağlıklıyaşam"],
   "cta": "Bugünkü hareketini yorumlara yaz!"
-}</pre>
-  </div>
+}</code></pre>
+    </div>
+  </section>
 
-  <footer>v1.0.0 — Developed by <strong>Serhat Bülbül</strong> © 2025</footer>
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <h2>Öne Çıkanlar</h2>
+    <div class="grid">
+      <div class="feature lift">
+        <h3>🎯 Nişe Özel İçerik</h3>
+        <p>Fitness, kahve, otomotiv, seyahat… <strong>niche</strong> parametresiyle akışkan içerikler.</p>
+      </div>
+      <div class="feature lift">
+        <h3>🧩 Paket Çıktı</h3>
+        <p>Tek istekle <em>hook + caption + hashtag + CTA</em> seti. Zaman kazandırır.</p>
+      </div>
+      <div class="feature lift">
+        <h3>🌍 Çok Dilli</h3>
+        <p><code>lang=tr | en</code> ile iki dil hazır. Diğer diller için yol haritası açık.</p>
+      </div>
+      <div class="feature lift">
+        <h3>⚡ Basit ve Hızlı</h3>
+        <p>Temiz JSON, açık uç noktalar, minimum gecikme. CDN &amp; cache dostu.</p>
+      </div>
+      <div class="feature lift">
+        <h3>📦 Stabil Sürüm</h3>
+        <p><strong>v1.0.0</strong> ile production’a uygun. SemVer ile versiyonlama.</p>
+      </div>
+      <div class="feature lift">
+        <h3>🛠️ Dokümantasyon</h3>
+        <p>Swagger/OpenAPI tabanlı <a href="/docs">/docs</a>. Hemen deneyin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENDPOINTS -->
+  <section class="section" id="endpoints">
+    <h2>Uç Noktalar</h2>
+    <div class="grid">
+      <div class="endpoint lift" style="grid-column: span 6;">
+        <strong>/planner/daily</strong>
+        <small> — Günlük paket</small>
+        <code>GET /planner/daily?niche=coffee&lang=en</code>
+      </div>
+      <div class="endpoint lift" style="grid-column: span 6;">
+        <strong>/captions/pack</strong>
+        <small> — 5’li caption seti</small>
+        <code>GET /captions/pack?niche=travel&lang=tr&count=5</code>
+      </div>
+      <div class="endpoint lift">
+        <strong>/hooks/random</strong>
+        <small> — Çarpıcı giriş</small>
+        <code>GET /hooks/random?niche=beauty</code>
+      </div>
+      <div class="endpoint lift">
+        <strong>/hashtags/trend</strong>
+        <small> — Trend etiketler</small>
+        <code>GET /hashtags/trend?niche=gaming&lang=en</code>
+      </div>
+      <div class="endpoint lift">
+        <strong>/cta/punchy</strong>
+        <small> — Aksiyon çağrısı</small>
+        <code>GET /cta/punchy?tone=bold&lang=tr</code>
+      </div>
+      <div class="endpoint lift">
+        <strong>/ideas/topic</strong>
+        <small> — İçerik fikirleri</small>
+        <code>GET /ideas/topic?niche=fitness&count=10</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXAMPLES / TABS -->
+  <section class="section" id="examples">
+    <h2>Hızlı Başlangıç</h2>
+    <div class="tabs">
+      <div class="tab-head">
+        <button class="tab-btn active" data-tab="curl">cURL</button>
+        <button class="tab-btn" data-tab="js">JavaScript (fetch)</button>
+        <button class="tab-btn" data-tab="py">Python (requests)</button>
+      </div>
+      <div class="tab-body">
+        <pre id="tab-curl"><code>curl -s "https://api.yourdomain.com/planner/daily?niche=fitness&lang=tr"</code></pre>
+        <pre id="tab-js" style="display:none"><code>fetch("https://api.yourdomain.com/planner/daily?niche=fitness&lang=tr")
+  .then(r => r.json())
+  .then(console.log)</code></pre>
+        <pre id="tab-py" style="display:none"><code>import requests
+print(requests.get(
+  "https://api.yourdomain.com/planner/daily",
+  params={"niche":"fitness","lang":"tr"}
+).json())</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <section class="section">
+    <div class="marquee" aria-label="popüler nişler">
+      <div class="marquee-track" id="marqueeTrack">
+        <span class="chip">#fitness</span>
+        <span class="chip">#coffee</span>
+        <span class="chip">#travel</span>
+        <span class="chip">#tech</span>
+        <span class="chip">#gaming</span>
+        <span class="chip">#beauty</span>
+        <span class="chip">#automotive</span>
+        <span class="chip">#startup</span>
+        <span class="chip">#ai</span>
+        <span class="chip">#foodie</span>
+        <!-- duplicate for seamless loop -->
+        <span class="chip">#fitness</span>
+        <span class="chip">#coffee</span>
+        <span class="chip">#travel</span>
+        <span class="chip">#tech</span>
+        <span class="chip">#gaming</span>
+        <span class="chip">#beauty</span>
+        <span class="chip">#automotive</span>
+        <span class="chip">#startup</span>
+        <span class="chip">#ai</span>
+        <span class="chip">#foodie</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-inner">
+      <span>© 2025 <strong>Serhat Bülbül</strong></span>
+      <span class="sep">•</span>
+      <a href="/docs">/docs</a>
+      <span class="sep">•</span>
+      <a href="https://github.com/serhatblb/content-api" target="_blank" rel="noreferrer">GitHub</a>
+      <span class="sep">•</span>
+      <span>v1.0.0</span>
+    </div>
+  </footer>
+
+  <script>
+    // Tabs logic
+    const btns = document.querySelectorAll('.tab-btn');
+    const bodies = {
+      curl: document.getElementById('tab-curl'),
+      js: document.getElementById('tab-js'),
+      py: document.getElementById('tab-py')
+    };
+    btns.forEach(b => b.addEventListener('click', () => {
+      btns.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      Object.values(bodies).forEach(el => el.style.display = 'none');
+      bodies[b.dataset.tab].style.display = 'block';
+    }));
+
+    // Parallax tilt on demo card
+    const demo = document.querySelector('.demo-card');
+    demo.addEventListener('mousemove', (e) => {
+      const r = demo.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const rx = (y/r.height - .5) * -6; // rotate X
+      const ry = (x/r.width  - .5) *  6; // rotate Y
+      demo.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    });
+    demo.addEventListener('mouseleave', () => { demo.style.transform = 'rotateX(0) rotateY(0)'; });
+
+    // Pause marquee on hover
+    const track = document.getElementById('marqueeTrack');
+    track.addEventListener('mouseenter', ()=> track.style.animationPlayState = 'paused');
+    track.addEventListener('mouseleave', ()=> track.style.animationPlayState = 'running');
+  </script>
 </body>
 </html>
