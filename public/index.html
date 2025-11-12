@@ -15,119 +15,335 @@
       --card-border: rgba(255,255,255,0.12);
       --text: #eaf6ff;
       --muted: #b6c2d1;
-      --primary: #00ADB5; /* mevcut paletini koruduk */
-      --accent: #8b5cf6; /* mor */
+      --primary: #00ADB5;
+      --accent: #8b5cf6;
       --hot: #ff6b6b;
       --ok: #20c997;
       --glow: 0 0 25px rgba(0,173,181,0.35), 0 0 60px rgba(139,92,246,0.25);
       --radius: 18px;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      margin: 0; color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text); 
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       background: radial-gradient(1200px 800px at 80% -10%, rgba(0,173,181,0.18), transparent 60%),
                   radial-gradient(900px 700px at -10% 0%, rgba(139,92,246,0.16), transparent 60%),
                   linear-gradient(180deg, #0b0f15, #0f1723 30%, #0c1016);
       overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* --- Animated Aurora Background --- */
+    /* Aurora Background */
     .aurora {
-      position: fixed; inset: -20vmax; z-index: -1; filter: blur(40px) saturate(120%);
-      background: conic-gradient(from 0deg at 50% 50%, rgba(0,173,181,0.35), rgba(139,92,246,0.28), rgba(255,107,107,0.22), rgba(0,173,181,0.35));
-      animation: swirl 18s infinite linear;
-      opacity: .65; pointer-events: none;
+      position: fixed; inset: -20vmax; z-index: -1; filter: blur(60px) saturate(150%);
+      background: conic-gradient(from 0deg at 50% 50%, rgba(0,173,181,0.4), rgba(139,92,246,0.3), rgba(255,107,107,0.25), rgba(0,173,181,0.4));
+      animation: swirl 20s infinite linear;
+      opacity: .6; pointer-events: none;
     }
     @keyframes swirl { to { transform: rotate(360deg); } }
 
-    /* --- NAV --- */
+    /* Navigation */
     .nav {
-      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px);
-      background: linear-gradient(180deg, rgba(12,16,22,0.8), rgba(12,16,22,0.35));
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(12,16,22,0.9), rgba(12,16,22,0.7));
       border-bottom: 1px solid var(--card-border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; gap: 16px; }
+    .nav-inner { 
+      max-width: 1280px; margin: 0 auto; padding: 14px 20px; 
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; 
+    }
+    
     .logo {
-      display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text);
-      font-family: Poppins, Inter, sans-serif; font-weight: 800; letter-spacing: .5px;
+      display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text);
+      font-family: Poppins, Inter, sans-serif; font-weight: 800; font-size: 1.1rem;
+      letter-spacing: .5px; transition: transform .2s;
     }
-    .logo-mark { width: 34px; height: 34px; border-radius: 10px; position: relative; overflow: hidden; box-shadow: var(--glow); }
-    .logo-mark::before { content:""; position:absolute; inset:0; background: linear-gradient(135deg, var(--primary), var(--accent)); }
-    .logo small { color: var(--muted); font-weight: 600; margin-left: 6px; opacity: .8; }
-    .nav-actions { margin-left: auto; display: flex; gap: 10px; }
+    .logo:hover { transform: scale(1.02); }
+    
+    .logo-mark { 
+      width: 36px; height: 36px; border-radius: 10px; position: relative; 
+      overflow: hidden; box-shadow: var(--glow); flex-shrink: 0;
+    }
+    .logo-mark::before { 
+      content:""; position:absolute; inset:0; 
+      background: linear-gradient(135deg, var(--primary), var(--accent)); 
+    }
+    
+    .logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .logo-text small { 
+      color: var(--muted); font-weight: 600; font-size: 0.7rem; 
+      opacity: .8; letter-spacing: 0;
+    }
 
-    .btn { --pad: 11px 16px; display:inline-flex; align-items:center; gap:10px; padding: var(--pad); border-radius: 12px; border:1px solid var(--card-border); color:var(--text); text-decoration:none; font-weight:600; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)); transition: transform .15s ease, box-shadow .2s ease, background .2s ease; }
-    .btn:hover { transform: translateY(-1px); box-shadow: var(--glow); }
-    .btn.primary { background: linear-gradient(180deg, rgba(0,173,181,0.22), rgba(0,173,181,0.05)); border-color: rgba(0,173,181,0.45); color: #c9feff; }
-    .btn.ghost { background: transparent; }
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none; background: transparent; border: 2px solid var(--card-border);
+      border-radius: 10px; padding: 8px 12px; color: var(--text); cursor: pointer;
+      font-size: 1.2rem; transition: all .2s;
+    }
+    .menu-toggle:hover { border-color: var(--primary); box-shadow: var(--glow); }
 
-    /* --- HERO --- */
-    .hero { max-width: 1200px; margin: 0 auto; padding: 56px 20px 24px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 28px; align-items: center; }
-    @media (max-width: 980px) { .hero { grid-template-columns: 1fr; text-align: center; } .badge-row { justify-content:center; } .nav-actions { display:none; } }
+    .nav-actions { 
+      display: flex; gap: 10px; align-items: center;
+    }
+
+    .btn { 
+      display:inline-flex; align-items:center; justify-content: center; gap:8px; 
+      padding: 11px 18px; border-radius: 12px; border:1px solid var(--card-border); 
+      color:var(--text); text-decoration:none; font-weight:600; font-size: 0.9rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03)); 
+      transition: all .2s ease; white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+    .btn.primary { 
+      background: linear-gradient(135deg, rgba(0,173,181,0.3), rgba(0,173,181,0.15)); 
+      border-color: rgba(0,173,181,0.5); color: #c9feff; 
+      box-shadow: 0 4px 15px rgba(0,173,181,0.3);
+    }
+    .btn.primary:hover { box-shadow: 0 6px 25px rgba(0,173,181,0.5); }
+    .btn.ghost { background: transparent; border-color: transparent; }
+
+    /* Hero Section */
+    .hero { 
+      max-width: 1280px; margin: 0 auto; padding: clamp(40px, 8vw, 80px) 20px 40px; 
+      display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; 
+    }
+
+    .hero-content { max-width: 100%; }
+    
+    .badge-row { 
+      display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; 
+      justify-content: flex-start;
+    }
+    .badge { 
+      padding: 7px 12px; border-radius: 999px; background: var(--card); 
+      border: 1px solid var(--card-border); color: #cfe7ff; font-size: .85rem; 
+      display: inline-flex; align-items: center; gap: 8px; font-weight: 500;
+    }
+    .pulse { 
+      width: 8px; height: 8px; border-radius: 999px; background: var(--ok); 
+      box-shadow: 0 0 0 0 rgba(32,201,151, .8); animation: pulse 1.8s infinite; 
+    }
+    @keyframes pulse { 
+      70% { box-shadow: 0 0 0 12px rgba(32,201,151,0); } 
+      100% { box-shadow: 0 0 0 0 rgba(32,201,151,0);} 
+    }
 
     .title {
-      font-family: Poppins, Inter, sans-serif; font-weight: 800; font-size: clamp(2.1rem, 3vw + 1rem, 4rem); line-height: 1.05;
-      letter-spacing: .2px; margin: 6px 0 12px; background: linear-gradient(90deg, #c9feff, #f1eaff 50%, #ffd7d7);
+      font-family: Poppins, Inter, sans-serif; font-weight: 800; 
+      font-size: clamp(2rem, 6vw, 3.8rem); line-height: 1.1;
+      letter-spacing: -.5px; margin: 0 0 20px; 
+      background: linear-gradient(120deg, #c9feff 0%, #f1eaff 40%, #ffd7d7 100%);
       -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    .subtitle { color: var(--muted); font-size: 1.08rem; max-width: 680px; }
+    
+    .subtitle { 
+      color: var(--muted); font-size: clamp(1rem, 2.5vw, 1.15rem); 
+      line-height: 1.7; max-width: 680px; margin-bottom: 28px;
+    }
 
-    .badge-row { display: flex; gap: 10px; margin: 18px 0 26px; flex-wrap: wrap; }
-    .badge { padding: 6px 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--card-border); color: #cfe7ff; font-size: .85rem; display: inline-flex; align-items: center; gap: 8px; }
-    .pulse { width: 8px; height: 8px; border-radius: 999px; background: var(--ok); box-shadow: 0 0 0 0 rgba(32,201,151, .8); animation: pulse 1.6s infinite; }
-    @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(32,201,151,0); } 100% { box-shadow: 0 0 0 0 rgba(32,201,151,0);} }
+    .cta-row { 
+      display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; 
+    }
 
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    /* Demo Card */
+    .demo-card { 
+      position: relative; 
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04)); 
+      border:1px solid var(--card-border); border-radius: var(--radius); 
+      padding: 20px; overflow:hidden; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      transition: transform .3s ease;
+    }
+    
+    .demo-card .head { 
+      display:flex; align-items:center; justify-content:space-between; 
+      padding:12px; border-bottom: 1px dashed rgba(255,255,255,0.15); 
+      margin-bottom: 12px;
+    }
+    .demo-card .dot { 
+      width: 10px; height: 10px; border-radius: 50%; background: var(--primary); 
+      box-shadow: 0 0 0 6px rgba(0,173,181,0.15); 
+    }
+    .demo-card .title-sm { font-weight: 700; letter-spacing: .3px; font-size: 0.95rem; }
+    .demo-card pre { 
+      margin: 0; padding: 14px; background: rgba(0, 0, 0, 0.4); 
+      border:1px solid rgba(255,255,255,0.1); border-radius: 12px; 
+      overflow-x: auto; font-size: clamp(0.75rem, 2vw, 0.9rem); 
+      line-height: 1.6; color: #dff9ff; 
+    }
+    .demo-card code { 
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; 
+    }
 
-    /* --- HERO DEMO CARD --- */
-    .demo-card { position: relative; background: linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.03)); border:1px solid var(--card-border); border-radius: var(--radius); padding: 16px; overflow:hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-    .demo-card .head { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom: 1px dashed rgba(255,255,255,0.12); }
-    .demo-card .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 6px rgba(0,173,181,0.13); }
-    .demo-card .title-sm { font-weight: 700; letter-spacing: .3px; }
-    .demo-card pre { margin: 12px 0 0; padding: 14px; background: rgba(0, 0, 0, 0.35); border:1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow:auto; font-size: .92rem; line-height: 1.5; color: #dff9ff; }
-    .demo-card code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    /* Sections */
+    .section { 
+      max-width: 1280px; margin: 0 auto; 
+      padding: clamp(40px, 8vw, 70px) 20px; 
+    }
+    .section h2 { 
+      font-family: Poppins, Inter, sans-serif; 
+      font-size: clamp(1.6rem, 4vw, 2.2rem); 
+      margin: 0 0 24px; letter-spacing: -.3px; font-weight: 800;
+    }
 
-    /* --- Features --- */
-    .section { max-width: 1200px; margin: 0 auto; padding: 48px 20px; }
-    .section h2 { font-family: Poppins, Inter, sans-serif; font-size: clamp(1.4rem, 1.2vw + 1rem, 2rem); margin: 0 0 16px; letter-spacing: .4px; }
-    .grid { display:grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
-    .feature { grid-column: span 4; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 18px; position: relative; overflow: hidden; }
-    .feature::after { content:""; position: absolute; inset: -40% -60% auto auto; width: 240px; height: 240px; background: radial-gradient(closest-side, rgba(0,173,181,.18), transparent); transform: rotate(25deg); }
-    .feature h3 { margin: 0 0 8px; font-size: 1.1rem; letter-spacing: .3px; }
-    .feature p { margin: 0; color: var(--muted); font-size: .98rem; }
+    /* Features Grid */
+    .grid { 
+      display:grid; gap: 16px; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    }
+    
+    .feature { 
+      background: var(--card); border: 1px solid var(--card-border); 
+      border-radius: var(--radius); padding: 24px; position: relative; 
+      overflow: hidden; transition: all .3s ease;
+    }
+    .feature:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 12px 40px rgba(0,173,181,0.2); 
+      border-color: rgba(0,173,181,0.4);
+    }
+    .feature::after { 
+      content:""; position: absolute; inset: -40% -60% auto auto; 
+      width: 240px; height: 240px; 
+      background: radial-gradient(closest-side, rgba(0,173,181,.2), transparent); 
+      transform: rotate(25deg); pointer-events: none;
+    }
+    .feature h3 { 
+      margin: 0 0 10px; font-size: clamp(1.05rem, 2.5vw, 1.2rem); 
+      letter-spacing: .2px; position: relative; z-index: 1;
+    }
+    .feature p { 
+      margin: 0; color: var(--muted); font-size: clamp(0.9rem, 2vw, 1rem); 
+      position: relative; z-index: 1; line-height: 1.6;
+    }
 
-    @media (max-width: 1024px) { .feature{ grid-column: span 6; } }
-    @media (max-width: 640px) { .feature{ grid-column: span 12; } }
+    /* Endpoints */
+    .endpoint-grid {
+      display: grid; gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .endpoint { 
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)); 
+      border: 1px dashed var(--card-border); border-radius: 16px; 
+      padding: 18px; transition: all .3s ease;
+    }
+    .endpoint:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+      box-shadow: 0 8px 30px rgba(0,173,181,0.2);
+    }
+    .endpoint strong { display: block; margin-bottom: 8px; font-size: 1.05rem; }
+    .endpoint code { 
+      display:block; font-size: clamp(0.75rem, 2vw, 0.88rem); 
+      color:#a5fffa; background: rgba(0,0,0,.4); 
+      border:1px solid rgba(255,255,255,0.1); padding:12px; 
+      border-radius:10px; overflow-x: auto; margin-top: 10px;
+      word-break: break-all;
+    }
+    .endpoint small { color: var(--muted); font-size: 0.85rem; }
 
-    /* --- Endpoints --- */
-    .endpoint { grid-column: span 3; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px dashed var(--card-border); border-radius: 16px; padding: 14px; }
-    .endpoint code { display:block; font-size:.95rem; color:#a5fffa; background: rgba(0,0,0,.35); border:1px solid rgba(255,255,255,0.08); padding:10px 12px; border-radius:10px; }
-    .endpoint small { color: var(--muted); }
+    /* Tabs */
+    .tabs { 
+      background: var(--card); border: 1px solid var(--card-border); 
+      border-radius: 16px; overflow:hidden; 
+    }
+    .tab-head { 
+      display:flex; gap:6px; padding:8px; 
+      border-bottom: 1px solid var(--card-border); 
+      background: rgba(255,255,255,0.04); 
+      overflow-x: auto;
+    }
+    .tab-btn { 
+      flex: none; padding: 11px 16px; border-radius: 10px; 
+      border: 1px solid transparent; color: var(--muted); 
+      background: transparent; font-weight: 600; cursor: pointer; 
+      transition: all .2s; white-space: nowrap; font-size: 0.9rem;
+    }
+    .tab-btn.active { 
+      color: #eaffff; border-color: rgba(255,255,255,0.2); 
+      background: rgba(255,255,255,0.08); box-shadow: var(--glow); 
+    }
+    .tab-body { padding: 20px; }
+    .tab-body pre {
+      background: rgba(0,0,0,0.4); padding: 16px; border-radius: 12px;
+      overflow-x: auto; font-size: clamp(0.8rem, 2vw, 0.92rem);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
 
-    /* --- Tabs --- */
-    .tabs { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; overflow:hidden; }
-    .tab-head { display:flex; gap:6px; padding:6px; border-bottom: 1px solid var(--card-border); background: rgba(255,255,255,0.03); }
-    .tab-btn { flex: none; padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; color: var(--muted); background: transparent; font-weight: 600; cursor: pointer; }
-    .tab-btn.active { color: #eaffff; border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.06); box-shadow: var(--glow); }
-    .tab-body { padding: 14px; }
-
-    /* --- Marquee chips --- */
-    .marquee { overflow: hidden; border: 1px dashed var(--card-border); border-radius: 999px; padding: 10px 0; background: rgba(255,255,255,0.03); }
-    .marquee-track { display:flex; gap: 12px; white-space: nowrap; will-change: transform; animation: scroll 18s linear infinite; }
+    /* Marquee */
+    .marquee { 
+      overflow: hidden; border: 1px dashed var(--card-border); 
+      border-radius: 999px; padding: 14px 0; 
+      background: rgba(255,255,255,0.04); 
+    }
+    .marquee-track { 
+      display:flex; gap: 12px; white-space: nowrap; 
+      will-change: transform; animation: scroll 25s linear infinite; 
+    }
     @keyframes scroll { to { transform: translateX(-50%);} }
-    .chip { padding: 8px 12px; border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); border:1px solid var(--card-border); }
+    .chip { 
+      padding: 9px 14px; border-radius: 999px; font-size: 0.9rem;
+      background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.04)); 
+      border:1px solid var(--card-border); 
+    }
 
-    /* --- Footer --- */
-    footer { color: var(--muted); border-top: 1px solid var(--card-border); background: #0b0f15; }
-    .foot-inner { max-width:1200px; margin: 0 auto; padding: 28px 20px; display:flex; flex-wrap: wrap; align-items:center; gap:10px; }
-    .foot-inner a { color: #bfefff; text-decoration: none; }
+    /* Footer */
+    footer { 
+      color: var(--muted); border-top: 1px solid var(--card-border); 
+      background: #0b0f15; margin-top: 60px;
+    }
+    .foot-inner { 
+      max-width:1280px; margin: 0 auto; padding: 32px 20px; 
+      display:flex; flex-wrap: wrap; align-items:center; gap:12px; 
+      justify-content: center; text-align: center; font-size: 0.95rem;
+    }
+    .foot-inner a { color: #bfefff; text-decoration: none; transition: color .2s; }
+    .foot-inner a:hover { color: var(--primary); }
     .sep { opacity: .3; }
 
-    /* Nice little hover lift for cards */
-    .lift { transition: transform .15s ease, box-shadow .2s ease; }
-    .lift:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.35); }
+    /* Lift effect */
+    .lift { transition: transform .25s ease, box-shadow .3s ease; }
+    .lift:hover { transform: translateY(-6px); box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .nav-actions { display: none; position: fixed; top: 70px; left: 0; right: 0;
+        background: rgba(12,16,22,0.98); backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--card-border); padding: 20px;
+        flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      }
+      .nav-actions.active { display: flex; }
+      .menu-toggle { display: block; }
+      
+      .hero { grid-template-columns: 1fr; text-align: left; padding-top: 50px; }
+      .badge-row { justify-content: flex-start; }
+      .cta-row { flex-direction: column; }
+      .cta-row .btn { width: 100%; justify-content: center; }
+      
+      .demo-card { margin-top: 30px; }
+      
+      .grid { grid-template-columns: 1fr; }
+      .endpoint-grid { grid-template-columns: 1fr; }
+      
+      .section { padding: 40px 16px; }
+      
+      .logo-text span:first-child { font-size: 0.95rem; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .nav-actions { gap: 8px; }
+      .btn { padding: 10px 14px; font-size: 0.85rem; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1025px) {
+      .hero { grid-template-columns: 1.2fr 0.9fr; text-align: left; }
+    }
   </style>
 </head>
 <body>
@@ -138,31 +354,34 @@
     <div class="nav-inner">
       <a class="logo" href="#">
         <span class="logo-mark"></span>
-        Influencer Content API <small>v1.0.0</small>
+        <span class="logo-text">
+          <span>Influencer API</span>
+          <small>v1.0.0</small>
+        </span>
       </a>
-      <div class="nav-actions">
-        <a class="btn ghost" href="https://theysaidso.com/#" target="_blank" rel="noreferrer">İlham Kaynağı #1</a>
-        <a class="btn ghost" href="https://zenquotes.io/" target="_blank" rel="noreferrer">İlham Kaynağı #2</a>
-        <a class="btn primary" href="/docs">📘 API Dokümantasyonu</a>
-        <a class="btn" href="https://github.com/serhatblb/content-api" target="_blank" rel="noreferrer">⭐ GitHub</a>
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <div class="nav-actions" id="navActions">
+        <a class="btn primary" href="/docs">📘 Dokümantasyon</a>
+        <a class="btn" href="https://github.com/serhatblb/content-api" target="_blank">⭐ GitHub</a>
+        <a class="btn ghost" href="#features">Özellikler</a>
       </div>
     </div>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <div>
+    <div class="hero-content">
       <div class="badge-row">
         <span class="badge"><span class="pulse"></span> Canlı • 99.9% Uptime</span>
         <span class="badge">REST + JSON</span>
-        <span class="badge">Ücretsiz Katman</span>
+        <span class="badge">Ücretsiz</span>
       </div>
-      <h1 class="title">Sosyal medya için <em>anında</em> içerik: Hook, Caption, Hashtag ve CTA — tek API.</h1>
-      <p class="subtitle">Influencer Content API, nişe göre <strong>günlük plan</strong> ve <strong>paket</strong> döndüren eğlenceli bir içerik üretim servisi. Türkçe/İngilizce destekli, basit uç noktalar, güzel cevaplar. 🪄</p>
+      <h1 class="title">Sosyal medya için anında içerik üret</h1>
+      <p class="subtitle">Hook, Caption, Hashtag ve CTA — tek API ile. Nişe göre <strong>günlük plan</strong> ve <strong>paket</strong> döndüren içerik servisi. Türkçe/İngilizce destekli, basit uç noktalar. 🪄</p>
       <div class="cta-row">
-        <a class="btn primary" href="/docs">Hemen Başla</a>
-        <a class="btn" href="#examples">Örnekler</a>
-        <a class="btn ghost" href="#endpoints">Uç Noktalar</a>
+        <a class="btn primary" href="/docs">🚀 Hemen Başla</a>
+        <a class="btn" href="#examples">📖 Örnekler</a>
+        <a class="btn ghost" href="#endpoints">🔗 Uç Noktalar</a>
       </div>
     </div>
 
@@ -170,36 +389,36 @@
       <div class="head">
         <div style="display:flex; align-items:center; gap:10px;">
           <span class="dot"></span>
-          <span class="title-sm">Örnek İstek</span>
+          <span class="title-sm">İstek</span>
         </div>
         <span class="badge">GET</span>
       </div>
       <pre><code>GET /planner/daily?niche=fitness&lang=tr</code></pre>
-      <div class="head" style="margin-top:10px;">
+      <div class="head" style="margin-top:14px;">
         <div style="display:flex; align-items:center; gap:10px;">
           <span class="dot" style="background: var(--accent);"></span>
-          <span class="title-sm">Örnek Yanıt</span>
+          <span class="title-sm">Yanıt</span>
         </div>
-        <span class="badge" style="color:#eadbff">200 OK</span>
+        <span class="badge" style="color:#eadbff">200</span>
       </div>
       <pre><code>{
   "date": "2025-11-11",
   "niche": "fitness",
-  "hook": "Bunu kimse söylemedi: Kas yapmanın gizli kuralı!",
-  "caption": "Bugün kendine söz ver: 20 dk hareket. 💪",
-  "hashtags": ["#spormotivasyonu", "#fitness", "#sağlıklıyaşam"],
-  "cta": "Bugünkü hareketini yorumlara yaz!"
+  "hook": "Bunu kimse söylemedi!",
+  "caption": "20 dk hareket. 💪",
+  "hashtags": ["#fitness"],
+  "cta": "Yorumlara yaz!"
 }</code></pre>
     </div>
   </section>
 
   <!-- FEATURES -->
   <section class="section" id="features">
-    <h2>Öne Çıkanlar</h2>
+    <h2>✨ Öne Çıkanlar</h2>
     <div class="grid">
       <div class="feature lift">
         <h3>🎯 Nişe Özel İçerik</h3>
-        <p>Fitness, kahve, otomotiv, seyahat… <strong>niche</strong> parametresiyle akışkan içerikler.</p>
+        <p>Fitness, kahve, seyahat… <strong>niche</strong> parametresiyle akışkan içerikler al.</p>
       </div>
       <div class="feature lift">
         <h3>🧩 Paket Çıktı</h3>
@@ -207,68 +426,68 @@
       </div>
       <div class="feature lift">
         <h3>🌍 Çok Dilli</h3>
-        <p><code>lang=tr | en</code> ile iki dil hazır. Diğer diller için yol haritası açık.</p>
+        <p><code>lang=tr | en</code> ile iki dil hazır. Diğer diller roadmap'te.</p>
       </div>
       <div class="feature lift">
         <h3>⚡ Basit ve Hızlı</h3>
-        <p>Temiz JSON, açık uç noktalar, minimum gecikme. CDN &amp; cache dostu.</p>
+        <p>Temiz JSON, açık endpoint'ler, minimum gecikme. CDN dostu.</p>
       </div>
       <div class="feature lift">
-        <h3>📦 Stabil Sürüm</h3>
-        <p><strong>v1.0.0</strong> ile production’a uygun. SemVer ile versiyonlama.</p>
+        <h3>📦 Production Ready</h3>
+        <p><strong>v1.0.0</strong> ile stabil. SemVer versiyonlama.</p>
       </div>
       <div class="feature lift">
         <h3>🛠️ Dokümantasyon</h3>
-        <p>Swagger/OpenAPI tabanlı <a href="/docs">/docs</a>. Hemen deneyin.</p>
+        <p>Swagger/OpenAPI tabanlı <a href="/docs" style="color:var(--primary)">/docs</a>. Hemen dene.</p>
       </div>
     </div>
   </section>
 
   <!-- ENDPOINTS -->
   <section class="section" id="endpoints">
-    <h2>Uç Noktalar</h2>
-    <div class="grid">
-      <div class="endpoint lift" style="grid-column: span 6;">
+    <h2>🔗 Uç Noktalar</h2>
+    <div class="endpoint-grid">
+      <div class="endpoint lift">
         <strong>/planner/daily</strong>
-        <small> — Günlük paket</small>
+        <small>Günlük paket</small>
         <code>GET /planner/daily?niche=coffee&lang=en</code>
       </div>
-      <div class="endpoint lift" style="grid-column: span 6;">
+      <div class="endpoint lift">
         <strong>/captions/pack</strong>
-        <small> — 5’li caption seti</small>
-        <code>GET /captions/pack?niche=travel&lang=tr&count=5</code>
+        <small>5'li caption seti</small>
+        <code>GET /captions/pack?niche=travel&count=5</code>
       </div>
       <div class="endpoint lift">
         <strong>/hooks/random</strong>
-        <small> — Çarpıcı giriş</small>
+        <small>Çarpıcı giriş</small>
         <code>GET /hooks/random?niche=beauty</code>
       </div>
       <div class="endpoint lift">
         <strong>/hashtags/trend</strong>
-        <small> — Trend etiketler</small>
-        <code>GET /hashtags/trend?niche=gaming&lang=en</code>
+        <small>Trend etiketler</small>
+        <code>GET /hashtags/trend?niche=gaming</code>
       </div>
       <div class="endpoint lift">
         <strong>/cta/punchy</strong>
-        <small> — Aksiyon çağrısı</small>
-        <code>GET /cta/punchy?tone=bold&lang=tr</code>
+        <small>Aksiyon çağrısı</small>
+        <code>GET /cta/punchy?tone=bold</code>
       </div>
       <div class="endpoint lift">
         <strong>/ideas/topic</strong>
-        <small> — İçerik fikirleri</small>
-        <code>GET /ideas/topic?niche=fitness&count=10</code>
+        <small>İçerik fikirleri</small>
+        <code>GET /ideas/topic?niche=fitness</code>
       </div>
     </div>
   </section>
 
-  <!-- EXAMPLES / TABS -->
+  <!-- EXAMPLES -->
   <section class="section" id="examples">
-    <h2>Hızlı Başlangıç</h2>
+    <h2>📖 Hızlı Başlangıç</h2>
     <div class="tabs">
       <div class="tab-head">
         <button class="tab-btn active" data-tab="curl">cURL</button>
-        <button class="tab-btn" data-tab="js">JavaScript (fetch)</button>
-        <button class="tab-btn" data-tab="py">Python (requests)</button>
+        <button class="tab-btn" data-tab="js">JavaScript</button>
+        <button class="tab-btn" data-tab="py">Python</button>
       </div>
       <div class="tab-body">
         <pre id="tab-curl"><code>curl -s "https://api.yourdomain.com/planner/daily?niche=fitness&lang=tr"</code></pre>
@@ -276,10 +495,11 @@
   .then(r => r.json())
   .then(console.log)</code></pre>
         <pre id="tab-py" style="display:none"><code>import requests
-print(requests.get(
+r = requests.get(
   "https://api.yourdomain.com/planner/daily",
   params={"niche":"fitness","lang":"tr"}
-).json())</code></pre>
+)
+print(r.json())</code></pre>
       </div>
     </div>
   </section>
@@ -298,7 +518,6 @@ print(requests.get(
         <span class="chip">#startup</span>
         <span class="chip">#ai</span>
         <span class="chip">#foodie</span>
-        <!-- duplicate for seamless loop -->
         <span class="chip">#fitness</span>
         <span class="chip">#coffee</span>
         <span class="chip">#travel</span>
@@ -318,16 +537,22 @@ print(requests.get(
     <div class="foot-inner">
       <span>© 2025 <strong>Serhat Bülbül</strong></span>
       <span class="sep">•</span>
-      <a href="/docs">/docs</a>
+      <a href="/docs">Docs</a>
       <span class="sep">•</span>
-      <a href="https://github.com/serhatblb/content-api" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://github.com/serhatblb/content-api" target="_blank">GitHub</a>
       <span class="sep">•</span>
       <span>v1.0.0</span>
     </div>
   </footer>
 
   <script>
-    // Tabs logic
+    // Mobile menu toggle
+    function toggleMenu() {
+      const menu = document.getElementById('navActions');
+      menu.classList.toggle('active');
+    }
+
+    // Tabs
     const btns = document.querySelectorAll('.tab-btn');
     const bodies = {
       curl: document.getElementById('tab-curl'),
@@ -341,21 +566,43 @@ print(requests.get(
       bodies[b.dataset.tab].style.display = 'block';
     }));
 
-    // Parallax tilt on demo card
-    const demo = document.querySelector('.demo-card');
-    demo.addEventListener('mousemove', (e) => {
-      const r = demo.getBoundingClientRect();
-      const x = e.clientX - r.left, y = e.clientY - r.top;
-      const rx = (y/r.height - .5) * -6; // rotate X
-      const ry = (x/r.width  - .5) *  6; // rotate Y
-      demo.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-    });
-    demo.addEventListener('mouseleave', () => { demo.style.transform = 'rotateX(0) rotateY(0)'; });
+    // Parallax tilt on demo card (desktop only)
+    if (window.innerWidth > 768) {
+      const demo = document.querySelector('.demo-card');
+      demo.addEventListener('mousemove', (e) => {
+        const r = demo.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        const rx = (y/r.height - .5) * -6;
+        const ry = (x/r.width  - .5) *  6;
+        demo.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      demo.addEventListener('mouseleave', () => { 
+        demo.style.transform = 'rotateX(0) rotateY(0)'; 
+      });
+    }
 
     // Pause marquee on hover
     const track = document.getElementById('marqueeTrack');
-    track.addEventListener('mouseenter', ()=> track.style.animationPlayState = 'paused');
-    track.addEventListener('mouseleave', ()=> track.style.animationPlayState = 'running');
+    track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+    track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.nav-actions a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('navActions').classList.remove('active');
+      });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
   </script>
 </body>
 </html>
