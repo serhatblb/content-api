@@ -5,53 +5,51 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+
 import api from "./routes/api.js";
-
-
 import quotes from "./routes/quotes.js";
 import captions from "./routes/captions.js";
 import hashtags from "./routes/hashtags.js";
 import facts from "./routes/facts.js";
 import planner from "./routes/planner.js";
 
-
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
-
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-// Güvenlik & performans
+// 🧱 Güvenlik & Performans middleware'leri
 app.use(helmet());
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], credentials: false }));
+app.use(cors({ origin: "*", credentials: false })); // 🔥 tüm kaynaklara izin ver
 app.use(compression());
 app.use(express.json());
 app.use(morgan("tiny"));
 
-
-// Rate limit (Free plan örneği)
+// ⏳ Rate limit (Free plan örneği: 60 req/dk)
 const limiter = rateLimit({ windowMs: 60 * 1000, max: 60 });
 app.use(limiter);
 
+// 🧩 API rotaları
 app.use("/api", api);
-
-// Health & status
-app.get("/health", (req, res) => res.json({ ok: true, uptime: process.uptime(), ts: Date.now() }));
-
-
-// Routes
 app.use("/quotes", quotes);
 app.use("/captions", captions);
 app.use("/hashtags", hashtags);
 app.use("/facts", facts);
 app.use("/planner", planner);
-app.use(express.static("public")); // 👈 public klasöründeki index.html ana sayfa olur
 
+// 🩺 Health kontrol
+app.get("/health", (req, res) => 
+  res.json({ ok: true, uptime: process.uptime(), ts: Date.now() })
+);
 
-// Docs
+// 🌍 Public klasör (HTML dosyaları)
+app.use(express.static("public"));
+
+// 📘 Swagger dokümantasyonu
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// 🏠 Ana sayfa (fallback)
 app.get("/", (req, res) => {
   res.send(`
     <html>
@@ -99,7 +97,7 @@ app.get("/", (req, res) => {
   `);
 });
 
-
+// 🚀 Sunucu başlat
 app.listen(PORT, () => {
-console.log(`Content API running on http://localhost:${PORT}`);
+  console.log(`✅ Content API running on http://localhost:${PORT}`);
 });
